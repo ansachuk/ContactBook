@@ -1,0 +1,18 @@
+.backdrop {
+	position: fixed;
+
+	top: 0;
+	left: 0;
+	z-index: 99999999999;
+
+	height: 100%;
+	width: 100%;
+
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	user-select: none;
+	overflow: hidden;
+	background-color: #00000095;
+}
