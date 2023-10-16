@@ -1,18 +1,19 @@
 import { createSelector } from "@reduxjs/toolkit";
+import { State } from "../@types/types";
 
-export const selectContacts = ({ contacts }) => contacts.items;
-export const selectContactsIsLoading = ({ contacts }) => contacts.isLoading;
-export const selectContactsError = ({ contacts }) => contacts.error;
+export const selectContacts = ({ contacts }: State) => contacts.items;
+export const selectContactsIsLoading = ({ contacts }: State) => contacts.isLoading;
+export const selectContactsError = ({ contacts }: State) => contacts.error;
 
-export const selectFilter = ({ filter }) => filter;
+export const selectFilter = ({ filter }: State) => filter;
 
 export const selectFilteredContacts = createSelector([selectContacts, selectFilter], (contacts, filter) => {
 	const filteredContacts = contacts.filter(({ name }) => name.toLowerCase().includes(filter.toLowerCase()));
 	return filteredContacts;
 });
 
-export const selectIsLoggedIn = ({ auth }) => auth.isLoggedIn;
-export const selectUser = ({ auth }) => auth.user;
-export const selectToken = ({ auth }) => auth.token;
-export const selectAuthIsLoading = ({ auth }) => auth.isLoading;
-export const selectAuthError = ({ auth }) => auth.error;
+export const selectIsLoggedIn = ({ auth }: State) => auth.isLoggedIn;
+export const selectUser = ({ auth }: State) => auth.user;
+export const selectToken = ({ auth }: State) => auth.token;
+export const selectAuthIsLoading = ({ auth }: State) => auth.isLoading;
+export const selectAuthError = ({ auth }: State) => auth.error;

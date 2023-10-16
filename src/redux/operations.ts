@@ -1,42 +1,46 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import axios from "axios";
+import { Contact } from "../@types/types";
 
 axios.defaults.baseURL = "https://connections-api.herokuapp.com/";
 
 const contactsEndpoint = "contacts";
 const userAuthEndpoint = "users";
 
-const fetchContacts = createAsyncThunk(`${contactsEndpoint}/fetchAll`, async (_, { rejectWithValue }) => {
+const fetchContacts = createAsyncThunk(`${contactsEndpoint}/fetchAll`, async (_, { rejectWithValue }): Promise<Contact[]> => {
 	try {
 		const { data } = await axios.get(contactsEndpoint);
 		return data;
 	} catch (e) {
-		return rejectWithValue(e.message);
+		throw rejectWithValue((e as Error).message);
 	}
 });
 
-const addContact = createAsyncThunk(`${contactsEndpoint}/addTask`, async ({ name, phone: number }, { rejectWithValue }) => {
-	try {
-		const { data } = await axios.post(contactsEndpoint, { name, number });
-		return data;
-	} catch (e) {
-		return rejectWithValue(e.message);
-	}
-});
+const addContact = createAsyncThunk(
+	`${contactsEndpoint}/addTask`,
+	async ({ name, phone: number }: Omit<Contact, "id">, { rejectWithValue }): Promise<Contact> => {
+		try {
+			const { data } = await axios.post(contactsEndpoint, { name, number });
+			return data;
+		} catch (e) {
+			throw rejectWithValue((e as Error).message);
+		}
+	},
+);
 
-const deleteContact = createAsyncThunk(`${contactsEndpoint}/deleteContact`, async (id, { rejectWithValue }) => {
+const deleteContact = createAsyncThunk(`${contactsEndpoint}/deleteContact`, async (id, { rejectWithValue }): Promise<void> => {
 	try {
 		const { data } = await axios.delete(`${contactsEndpoint}/${id}`);
 		return data;
 	} catch (e) {
-		return rejectWithValue(e.message);
+		throw rejectWithValue((e as Error).message);
 	}
 });
 
 //!============================================================================
 
-const setAuthJWTHeader = token => {
+const setAuthJWTHeader = (token: string) => {
 	axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 };
 
@@ -50,7 +54,7 @@ const signupUser = createAsyncThunk("auth/register", async (cred, { rejectWithVa
 		setAuthJWTHeader(data.token);
 		return data;
 	} catch (e) {
-		return rejectWithValue(e.message);
+		throw rejectWithValue((e as Error).message);
 	}
 });
 
@@ -60,7 +64,7 @@ const login = createAsyncThunk("auth/login", async (cred, { rejectWithValue }) =
 		setAuthJWTHeader(data.token);
 		return data;
 	} catch (e) {
-		return rejectWithValue(e.message);
+		throw rejectWithValue((e as Error).message);
 	}
 });
 
@@ -70,7 +74,7 @@ const logout = createAsyncThunk("auth/logout", async (_, { rejectWithValue }) =>
 		clearAuthJWTHeader();
 		return data;
 	} catch (e) {
-		return rejectWithValue(e.message);
+		throw rejectWithValue((e as Error).message);
 	}
 });
 
@@ -80,7 +84,7 @@ const refresh = createAsyncThunk("auth/refresh", async (token, { rejectWithValue
 		const { data } = await axios.get(`${userAuthEndpoint}/current`);
 		return data;
 	} catch (e) {
-		return rejectWithValue(e.message);
+		throw rejectWithValue((e as Error).message);
 	}
 });
 

@@ -1,15 +1,15 @@
 import { Suspense, lazy, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { fetchContacts, logout } from "redux/operations";
-import { selectContactsError, selectContactsIsLoading, selectContacts, selectUser } from "redux/selectors";
-import Loader from "components/Loader/Loader";
+import { fetchContacts, logout } from "../../redux/operations";
+import { selectContactsError, selectContactsIsLoading, selectContacts, selectUser } from "../../redux/selectors";
+import Loader from "../../components/Loader/Loader";
+import ContactForm from "../../components/ContactForm/ContactForm";
 
-import ContactForm from "components/ContactForm/ContactForm";
 import css from "./ContactsPage.module.scss";
 
-const Filter = lazy(() => import("components/Filter/Filter"));
-const ContactList = lazy(() => import("components/ContactList/ContactList"));
+const Filter = lazy(() => import("../../components/Filter/Filter"));
+const ContactList = lazy(() => import("../../components/ContactList/ContactList"));
 
 export default function ContactsPage() {
 	const disp = useDispatch();

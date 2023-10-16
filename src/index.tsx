@@ -6,16 +6,15 @@ import { PersistGate } from "redux-persist/integration/react";
 
 import store, { persistor } from "./redux/store";
 
-import { App } from "components/App/App";
-import Loader from "components/Loader/Loader";
-
 import "./index.scss";
+import Loader from "./components/Loader/Loader";
+import { App } from "./components/App/App";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
 		<Provider store={store}>
-			<PersistGate loading={<Loader />} persistor={persistor}>
-				<BrowserRouter basename="goit-react-hw-08-phonebook">
+			<PersistGate loading={<Loader isLoading={true} />} persistor={persistor}>
+				<BrowserRouter basename="ContactBook">
 					<App />
 				</BrowserRouter>
 			</PersistGate>

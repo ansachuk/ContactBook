@@ -3,7 +3,8 @@ import css from "../LoginPage/LoginPage.module.scss";
 
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { signupUser } from "redux/operations";
+import { signupUser } from "../../redux/operations";
+
 import { Notify } from "notiflix";
 
 export default function RegisterPage() {
