@@ -7,12 +7,13 @@ import Loader from "../../components/Loader/Loader";
 import ContactForm from "../../components/ContactForm/ContactForm";
 
 import css from "./ContactsPage.module.scss";
+import { AppDispatch } from "../../@types/reduxTypes";
 
 const Filter = lazy(() => import("../../components/Filter/Filter"));
 const ContactList = lazy(() => import("../../components/ContactList/ContactList"));
 
 export default function ContactsPage() {
-	const disp = useDispatch();
+	const disp = useDispatch<AppDispatch>();
 
 	const { name, email } = useSelector(selectUser);
 	const contacts = useSelector(selectContacts);

@@ -1,12 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 
+import { selectFilter } from "../../redux/selectors";
 import { setFilter } from "../../redux/slices/filterSlice";
 
 import css from "./Filter.module.scss";
+import { AppDispatch } from "../../@types/reduxTypes";
 
 function Filter() {
-	const filter = useSelector(({ filter }) => filter);
-	const dispatch = useDispatch();
+	const filter = useSelector(selectFilter);
+	const dispatch = useDispatch<AppDispatch>();
 
 	return (
 		<div>

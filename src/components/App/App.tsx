@@ -3,11 +3,12 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { selectIsLoggedIn, selectToken } from "../../redux/selectors";
+import { refresh } from "../../redux/operations";
 
 import PrivatRoute from "../../components/PrivatRoute/PrivatRoute";
 import PublicRoute from "../../components/PublicRoute/PublicRoute";
 import Loader from "../../components/Loader/Loader";
-import { refresh } from "../../redux/operations";
+import { AppDispatch } from "../../@types/reduxTypes";
 
 const ContactsPage = lazy(() => import("../../pages/ContactsPage/ContactsPage"));
 const LoginPage = lazy(() => import("../../pages/LoginPage/LoginPage"));
@@ -16,7 +17,7 @@ const RegisterPage = lazy(() => import("../../pages/RegisterPage/RegisterPage"))
 export function App() {
 	const isAuth = useSelector(selectIsLoggedIn);
 	const token = useSelector(selectToken);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		if (token && !isAuth) {
@@ -25,7 +26,7 @@ export function App() {
 	}, [dispatch, isAuth, token]);
 
 	return (
-		<Suspense fallback={<Loader />}>
+		<Suspense fallback={<Loader isLoading={true} />}>
 			<Routes>
 				<Route
 					path="/contacts"

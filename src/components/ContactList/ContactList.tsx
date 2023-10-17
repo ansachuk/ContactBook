@@ -6,12 +6,13 @@ import { selectFilteredContacts } from "../../redux/selectors";
 import { Notify } from "notiflix";
 
 import css from "./ContactList.module.scss";
+import { AppDispatch } from "../../@types/reduxTypes";
 
 const ContactList = () => {
 	const filteredContacts = useSelector(selectFilteredContacts);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
-	const onDeleteContact = id => {
+	const onDeleteContact = (id: string) => {
 		Notify.failure("Contact deleted!");
 		dispatch(deleteContact(id));
 	};
@@ -19,10 +20,10 @@ const ContactList = () => {
 	return (
 		<ul className={css.list}>
 			{filteredContacts?.length ? (
-				filteredContacts.map(({ name, number, id }) => (
+				filteredContacts.map(({ name, phone, id }) => (
 					<li key={name} className={css.listItem}>
 						<div>
-							{name} : <span className={css.number}>{number}</span>
+							{name} : <span className={css.number}>{phone}</span>
 						</div>
 						<button
 							className={css.deleteButton}

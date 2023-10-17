@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import css from "../LoginPage/LoginPage.module.scss";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -6,16 +6,17 @@ import { useDispatch } from "react-redux";
 import { signupUser } from "../../redux/operations";
 
 import { Notify } from "notiflix";
+import { AppDispatch } from "../../@types/reduxTypes";
 
 export default function RegisterPage() {
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
-	const onInputChange = e => {
+	const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
 
 		switch (name) {
@@ -36,7 +37,7 @@ export default function RegisterPage() {
 		}
 	};
 
-	const onFormSubmit = async e => {
+	const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		try {
@@ -50,7 +51,7 @@ export default function RegisterPage() {
 
 			navigate("/contacts");
 		} catch (e) {
-			Notify.failure(e.message);
+			Notify.failure((e as Error).message);
 		}
 	};
 

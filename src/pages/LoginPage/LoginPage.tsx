@@ -1,19 +1,20 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/operations";
 
 import { Notify } from "notiflix";
 
+import { AppDispatch } from "../../@types/reduxTypes";
 import css from "./LoginPage.module.scss";
 
 export default function LoginPage() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const navigate = useNavigate();
 
-	const onInputChange = e => {
+	const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.currentTarget;
 
 		switch (name) {
@@ -30,7 +31,7 @@ export default function LoginPage() {
 		}
 	};
 
-	const onFormSubmit = async e => {
+	const onFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		try {
@@ -43,7 +44,7 @@ export default function LoginPage() {
 
 			navigate("/contacts");
 		} catch (e) {
-			Notify.failure(e);
+			Notify.failure((e as Error).message);
 		}
 	};
 
