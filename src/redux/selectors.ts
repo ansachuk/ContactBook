@@ -5,7 +5,7 @@ export const selectContacts = ({ contacts }: State) => contacts.items;
 export const selectContactsIsLoading = ({ contacts }: State) => contacts.isLoading;
 export const selectContactsError = ({ contacts }: State) => contacts.error;
 
-export const selectFilter = ({ filter }: State) => filter;
+export const selectFilter = ({ filter }: State) => filter.filter;
 
 export const selectFilteredContacts = createSelector([selectContacts, selectFilter], (contacts, filter) => {
 	const filteredContacts = contacts.filter(({ name }) => name.toLowerCase().includes(filter.toLowerCase()));

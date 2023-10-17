@@ -1,13 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { FilterState } from "../../@types/reduxTypes";
 
-const initialState: FilterState = "";
+const initialState: FilterState = { filter: "" };
 
 const filterSlice = createSlice({
 	name: "filter",
 	initialState,
 	reducers: {
-		setFilter: (filter, action: PayloadAction<string>) => (filter = action.payload),
+		setFilter: (filter, action: PayloadAction<string>) => {
+			filter.filter = action.payload;
+		},
 	},
 });
 

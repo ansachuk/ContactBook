@@ -1,7 +1,7 @@
 import store from "../redux/store";
 import { AuthResponce, Contact } from "./types";
 
-export type FilterState = string;
+export type FilterState = { filter: string };
 
 export type ContactState = {
 	items: Contact[];

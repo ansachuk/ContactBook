@@ -22,14 +22,15 @@ const addContact = createAsyncThunk(
 	async ({ name, phone: number }: Omit<Contact, "id">, { rejectWithValue }): Promise<Contact> => {
 		try {
 			const { data } = await axios.post(contactsEndpoint, { name, number });
-			return data;
+			const contact = { name: data.name, phone: data.number, id: data.id };
+			return contact;
 		} catch (e) {
 			throw rejectWithValue((e as Error).message);
 		}
 	},
 );
 
-const deleteContact = createAsyncThunk(`${contactsEndpoint}/deleteContact`, async (id, { rejectWithValue }): Promise<void> => {
+const deleteContact = createAsyncThunk(`${contactsEndpoint}/deleteContact`, async (id: string, { rejectWithValue }): Promise<void> => {
 	try {
 		const { data } = await axios.delete(`${contactsEndpoint}/${id}`);
 		return data;
@@ -48,17 +49,25 @@ const clearAuthJWTHeader = () => {
 	axios.defaults.headers.common.Authorization = "";
 };
 
-const signupUser = createAsyncThunk("auth/register", async (cred, { rejectWithValue }): Promise<User> => {
-	try {
-		const { data } = await axios.post(`${userAuthEndpoint}/signup`, cred);
-		setAuthJWTHeader(data.token);
-		return data;
-	} catch (e) {
-		throw rejectWithValue((e as Error).message);
-	}
-});
+const signupUser = createAsyncThunk(
+	"auth/register",
+	async (
+		cred: User & {
+			password: string;
+		},
+		{ rejectWithValue },
+	): Promise<User> => {
+		try {
+			const { data } = await axios.post(`${userAuthEndpoint}/signup`, cred);
+			setAuthJWTHeader(data.token);
+			return data;
+		} catch (e) {
+			throw rejectWithValue((e as Error).message);
+		}
+	},
+);
 
-const login = createAsyncThunk("auth/login", async (cred, { rejectWithValue }): Promise<User> => {
+const login = createAsyncThunk("auth/login", async (cred: { email: string; password: string }, { rejectWithValue }): Promise<User> => {
 	try {
 		const { data } = await axios.post(`${userAuthEndpoint}/login`, cred);
 		setAuthJWTHeader(data.token);

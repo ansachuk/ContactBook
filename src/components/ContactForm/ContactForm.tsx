@@ -4,6 +4,7 @@ import { Notify } from "notiflix";
 
 import { addContact } from "../../redux/operations";
 import { selectContacts } from "../../redux/selectors";
+import { AppDispatch } from "../../@types/reduxTypes";
 
 import css from "./ContactForm.module.scss";
 
@@ -11,7 +12,7 @@ export default function ContactForm() {
 	const [name, setName] = useState("");
 	const [phone, setPhone] = useState("");
 	const contacts = useSelector(selectContacts);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const resetState = () => {
 		setName("");
