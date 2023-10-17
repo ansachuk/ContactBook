@@ -1,23 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 import { fetchContacts, addContact, deleteContact } from "../operations";
+import { ContactState } from "../../@types/reduxTypes";
+import { Contact } from "../../@types/types";
 
-const initialState = {
+const initialState: ContactState = {
 	items: [],
 	isLoading: false,
 	error: null,
 };
 
-const handleLoading = state => {
+const handleLoading = (state: ContactState) => {
 	state.isLoading = true;
 };
 
-const handleRejected = (state, { payload }) => {
+const handleRejected = (state: ContactState, action: PayloadAction<Error>) => {
 	state.isLoading = false;
-	state.error = payload;
+	state.error = action.payload;
 };
 
-const handleFullfilled = state => {
+const handleFullfilled = (state: ContactState) => {
 	state.isLoading = false;
 	state.error = null;
 };
@@ -25,29 +27,24 @@ const handleFullfilled = state => {
 const contactsSlice = createSlice({
 	name: "contacts",
 	initialState,
+	reducers: {},
 
-	extraReducers: {
-		[fetchContacts.pending]: handleLoading,
-		[fetchContacts.fulfilled]: (state, { payload }) => {
-			handleFullfilled(state);
-			state.items = payload;
-		},
-		[fetchContacts.rejected]: handleRejected,
-
-		[addContact.pending]: handleLoading,
-		[addContact.fulfilled]: (state, { payload }) => {
-			handleFullfilled(state);
-			state.items.push(payload);
-		},
-		[addContact.rejected]: handleRejected,
-
-		[deleteContact.pending]: handleLoading,
-		[deleteContact.fulfilled]: (state, { payload }) => {
-			handleFullfilled(state);
-			state.items = state.items.filter(({ id }) => id !== payload.id);
-		},
-		[deleteContact.rejected]: handleRejected,
-	},
+	extraReducers: builder =>
+		builder
+			.addCase(fetchContacts.fulfilled, (state, { payload }) => {
+				handleFullfilled(state);
+				state.items = payload;
+			})
+			.addCase(addContact.fulfilled, (state, { payload }) => {
+				handleFullfilled(state);
+				state.items.push(payload);
+			})
+			.addCase(deleteContact.fulfilled, (state, { payload }) => {
+				handleFullfilled(state);
+				state.items = state.items.filter(({ id }) => id !== (payload as unknown as Contact).id);
+			})
+			.addMatcher(action => action.type.endsWith("/pending"), handleLoading)
+			.addMatcher(action => action.type.endsWith("/rejected"), handleRejected),
 });
 
 export default contactsSlice.reducer;

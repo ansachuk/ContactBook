@@ -1,70 +1,73 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { login, logout, signupUser, refresh } from "../operations";
+import { AuthState } from "../../@types/reduxTypes";
+import { User } from "../../@types/types";
 
-const initialState = {
-	user: { name: null, email: null },
-	token: null,
+const initialState: AuthState = {
+	user: { name: "", email: "" },
+	token: "",
 	isLoggedIn: false,
 	isLoading: false,
 	error: null,
 };
 
-const handleLoading = state => {
+const handleLoading = (state: AuthState) => {
 	state.isLoading = true;
 };
 
-const handleRejected = (state, { payload }) => {
+const handleRejected = (state: AuthState, action: PayloadAction<Error>) => {
 	state.isLoading = false;
-	state.error = payload;
+	state.error = action.payload;
 };
 
-const handleFullfilled = state => {
+const handleFullfilled = (state: AuthState) => {
 	state.isLoading = false;
 	state.error = null;
 };
 
-const handleLogin = (state, { payload: { token, user } }) => {
+const handleLogin = (state: AuthState, action: PayloadAction<Pick<AuthState, "token" | "user">>) => {
+	const { token, user } = action.payload;
+
 	handleFullfilled(state);
 	state.token = token;
 	state.user = user;
 	state.isLoggedIn = true;
 };
 
-const handleLogout = state => {
+const handleLogout = (state: AuthState) => {
 	state.isLoggedIn = false;
-	state.token = null;
-	state.user = { name: null, email: null };
-	state.isRefreshing = false;
+	state.token = "";
+	state.user = { name: "", email: "" };
 	state.isLoading = false;
 	state.error = null;
 };
 
-const handleRefresh = (state, { payload }) => {
+const handleRefresh = (state: AuthState, action: PayloadAction<User>) => {
 	handleFullfilled(state);
-	state.user = payload;
+	state.user = action.payload;
 	state.isLoggedIn = true;
 };
 
 const authSlice = createSlice({
 	name: "auth",
 	initialState,
+	reducers: {},
 
-	extraReducers: {
-		[signupUser.pending]: handleLoading,
-		[login.pending]: handleLoading,
-		[logout.pending]: handleLoading,
-		[refresh.pending]: handleLoading,
+	extraReducers: builder =>
+		builder
+			.addCase(signupUser.fulfilled.type, handleLogin)
+			.addCase(login.fulfilled.type, handleLogin)
+			.addCase(logout.fulfilled, handleLogout)
+			.addCase(refresh.fulfilled, handleRefresh)
+			.addMatcher(action => action.type.endsWith("/pending"), handleLoading)
+			.addMatcher(action => action.type.endsWith("/rejected"), handleRejected),
+	// {
 
-		[signupUser.rejected]: handleRejected,
-		[login.rejected]: handleRejected,
-		[logout.rejected]: handleRejected,
-		[refresh.rejected]: handleRejected,
-
-		[signupUser.fulfilled]: handleLogin,
-		[login.fulfilled]: handleLogin,
-		[logout.fulfilled]: handleLogout,
-		[refresh.fulfilled]: handleRefresh,
-	},
+	// 	[]: ,
+	// 	[login.fulfilled]: handleLogin,
+	// 	[logout.fulfilled]: ,
+	// 	[refresh.fulfilled]: ,
+	// },
 });
 
 export default authSlice.reducer;

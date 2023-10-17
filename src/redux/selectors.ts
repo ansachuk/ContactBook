@@ -1,5 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { State } from "../@types/types";
+import { State } from "../@types/reduxTypes";
 
 export const selectContacts = ({ contacts }: State) => contacts.items;
 export const selectContactsIsLoading = ({ contacts }: State) => contacts.isLoading;
